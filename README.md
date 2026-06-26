@@ -5,6 +5,8 @@ A [GNOME Shell](https://wiki.gnome.org/Projects/GnomeShell)
 [workspaces](https://help.gnome.org/users/gnome-help/stable/shell-workspaces)
 with `Ctrl`+`Super`+`Up`/`Down`.
 
+It is a fork of the original, upstream extension at [smmr0/gnome-reorder-workspaces](https://github.com/smmr0/gnome-reorder-workspaces). The original extension appears to be unmaintained, and this fork is intended to keep it working with newer versions of GNOME Shell.
+
 ## Installation
 
 ### [EGO](https://extensions.gnome.org/) (recommended)
