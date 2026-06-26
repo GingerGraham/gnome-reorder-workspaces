@@ -8,17 +8,29 @@ Extension versions correspond to the `version` field in `src/metadata.json`.
 ## [Unreleased]
 
 ### Added
+
 - `docs/skills/` — project-specific Claude skills for commit messages, PR descriptions,
   changelog maintenance, and release process
 - `docs/repo-fork-workflow.md` — fork and branch strategy documentation
+- `CONTRIBUTING.md` — contributor guide covering branch workflow, commit conventions,
+  PR process, and the automated release pipeline
+- `CODE_OF_CONDUCT.md` — Contributor Covenant v2.1
+- `.github/DISCUSSION_TEMPLATE/` — discussion category templates: Q&A, Ideas,
+  Show & Tell, and Compatibility reports
+- `.github/dependabot.yml` — automated dependency updates for npm packages (ESLint
+  toolchain) and GitHub Actions, with a 14-day cooldown on all ecosystems to guard
+  against supply-chain attacks
 
 ### Changed
+
 ### Fixed
+
 ### Removed
 
 ## [25] - (upstream)
 
 ### Added
+
 - GNOME Shell 45, 46, 47, 48, and 49 supported in `shell-version`
 - Preferences UI: configurable keybindings via `AccelRow`
 - Preferences UI: outside-overview behaviour selector via `KeybindingBehaviorOutsideOfOverviewRow`

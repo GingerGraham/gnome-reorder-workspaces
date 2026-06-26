@@ -1,0 +1,35 @@
+title: "[Show & Tell] "
+labels: []
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Use this category to share how you're using the extension, interesting
+        configurations, combinations with other extensions, or workflow setups.
+
+        These posts help other users and give the maintainer a picture of real-world
+        usage patterns.
+
+  - type: textarea
+    id: setup
+    attributes:
+      label: What are you sharing?
+    validations:
+      required: true
+
+  - type: input
+    id: gnome-version
+    attributes:
+      label: GNOME Shell version
+      placeholder: "e.g. GNOME Shell 47.2"
+
+  - type: input
+    id: distro
+    attributes:
+      label: Linux distribution
+      placeholder: "e.g. Fedora 41"
+
+  - type: textarea
+    id: additional
+    attributes:
+      label: Anything else

@@ -1,0 +1,44 @@
+title: "[Idea] "
+labels: []
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Use this category to float ideas before they are ready for a formal feature
+        request Issue. Good for half-formed thoughts, "would anyone else want this?"
+        polls, and early-stage design discussions.
+
+        Once an idea has enough shape (clear problem, proposed solution, willing
+        contributor), open a proper [Feature Request](https://github.com/GingerGraham/gnome-reorder-workspaces/issues/new?template=feature_request.yml)
+        Issue instead.
+
+  - type: textarea
+    id: idea
+    attributes:
+      label: The idea
+      description: What are you thinking? Don't worry about polish — that's what this category is for.
+    validations:
+      required: true
+
+  - type: textarea
+    id: problem
+    attributes:
+      label: What problem would this solve?
+      description: Optional, but useful even in rough form
+
+  - type: dropdown
+    id: interest
+    attributes:
+      label: Would you be interested in contributing this yourself?
+      options:
+        - "Yes, I'd like to try"
+        - "Maybe, with some guidance"
+        - "No, just floating the idea"
+        - "Not sure yet"
+    validations:
+      required: true
+
+  - type: textarea
+    id: additional
+    attributes:
+      label: Anything else

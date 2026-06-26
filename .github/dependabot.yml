@@ -1,0 +1,77 @@
+version: 2
+
+updates:
+  # ── npm / Yarn (dev dependencies only — ESLint toolchain) ──────────────────
+  - package-ecosystem: npm
+    directory: /
+    schedule:
+      interval: weekly
+      day: monday
+      time: "06:00"
+      timezone: Europe/London
+    # 14-day delay before any version is eligible for a PR.
+    # This guards against dependency confusion and supply-chain attacks
+    # where a malicious package version is pulled within hours of publication
+    # before the community has had time to detect and report it.
+    cooldown:
+      default-days: 14
+    open-pull-requests-limit: 5
+    labels:
+      - dependencies
+      - automated
+    commit-message:
+      prefix: "chore"
+      prefix-development: "chore"
+      include: scope
+    # Group all ESLint-related updates into a single PR to reduce noise.
+    # These are dev-only deps with no runtime impact on the extension itself.
+    groups:
+      eslint-toolchain:
+        patterns:
+          - "eslint*"
+          - "@eslint*"
+          - "@stylistic*"
+          - "@typescript-eslint*"
+          - "@eslint-community*"
+        update-types:
+          - minor
+          - patch
+    ignore:
+      # Do not auto-bump major versions — these often have breaking config changes
+      # that need manual review (e.g. ESLint 9 → 10 flat config migration).
+      - dependency-name: "eslint"
+        update-types: ["version-update:semver-major"]
+      - dependency-name: "eslint-config-summer"
+        update-types: ["version-update:semver-major"]
+
+  # ── GitHub Actions ──────────────────────────────────────────────────────────
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: weekly
+      day: monday
+      time: "06:00"
+      timezone: Europe/London
+    # Same 14-day cooldown applied to Actions versions.
+    # Compromised actions (e.g. tj-actions/changed-files CVE-2025-30066) are a
+    # known attack vector — delaying pickup gives the community time to respond.
+    cooldown:
+      default-days: 14
+    open-pull-requests-limit: 5
+    labels:
+      - dependencies
+      - ci
+      - automated
+    commit-message:
+      prefix: "ci"
+      include: scope
+    # Group patch/minor bumps for well-known first-party actions together.
+    # Major version bumps (e.g. actions/checkout@v4 → v5) are left ungrouped
+    # so they get individual PRs and deliberate review.
+    groups:
+      actions-minor-patch:
+        patterns:
+          - "actions/*"
+        update-types:
+          - minor
+          - patch

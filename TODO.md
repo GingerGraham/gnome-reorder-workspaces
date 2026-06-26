@@ -51,17 +51,9 @@ Items marked 📋 are meta/process work (skills, templates, docs).
       `org.gnome.Shell` / `workspace_manager`. Treat failures as advisory until
       proven stable. See `CLAUDE.md` § Automation Goals #4.
 
-- [ ] 🤖 **`dependency-update.yml`** — scheduled Yarn dependency updates (monthly),
-      open a PR with updated `yarn.lock`. Low risk as deps are dev-only (ESLint).
-      Alternative: enable Dependabot for npm ecosystem instead of a custom workflow.
-
 ---
 
 ## Developer Experience
-
-- [ ] 📋 **Dependabot config** (`.github/dependabot.yml`) — keep GitHub Actions
-      action versions current (e.g. `actions/checkout`, `actions/setup-node`).
-      Ecosystem: `github-actions`. Weekly schedule. Auto-assign label `dependencies`.
 
 - [ ] 📋 **Wayland headless investigation** — GNOME >= 45 is increasingly
       Wayland-native. Explore whether `xvfb-run` can be replaced or supplemented
@@ -72,11 +64,6 @@ Items marked 📋 are meta/process work (skills, templates, docs).
 ---
 
 ## Documentation
-
-- [ ] 📋 **`CONTRIBUTING.md`** — contributor guide covering: branch workflow,
-      commit message conventions (Conventional Commits), PR process, how the
-      automated release pipeline works, and how to test locally. Can pull heavily
-      from existing skills and `docs/repo-fork-workflow.md`.
 
 - [ ] 📋 **`README.md` update** — the upstream README covers installation only.
       Add a "Maintainer Notes" or "Fork Notes" section explaining this is a maintained
@@ -104,4 +91,11 @@ _Move items here (with version/date) when the corresponding PR merges._
       required PR review, auto-merge enabled
 - [x] 👤 GitHub Actions permissions — write access for contents, issues,
       and pull-requests granted via workflow permissions setting
-- [x] 📋 `.github/ISSUE_TEMPLATE/` — bug_report, gnome_version, test_failure, ego_submission templates
+- [x] 📋 `CONTRIBUTING.md` — contributor guide covering branch workflow, commit
+      conventions, PR process, and release pipeline overview
+- [x] 📋 `CODE_OF_CONDUCT.md` — Contributor Covenant v2.1
+- [x] 📋 `.github/DISCUSSION_TEMPLATE/` — q-and-a, ideas, show-and-tell,
+      compatibility discussion category templates
+- [x] 🤖 `.github/dependabot.yml` — Dependabot for npm packages (ESLint toolchain)
+      and GitHub Actions, both with 14-day cooldown for supply-chain safety;
+      supersedes the planned `dependency-update.yml` custom workflow

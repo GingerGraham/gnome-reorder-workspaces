@@ -1,0 +1,40 @@
+title: "[Question] "
+labels: []
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Use this category for questions about installation, configuration, usage,
+        or anything else that isn't a bug report or feature request.
+
+        Before posting, it's worth checking:
+        - The [README](https://github.com/GingerGraham/gnome-reorder-workspaces/blob/graham/main/README.md)
+        - The [EGO listing](https://extensions.gnome.org/extension/3685/reorder-workspaces/)
+          (comments there may have answers)
+        - Existing [discussions](https://github.com/GingerGraham/gnome-reorder-workspaces/discussions)
+          and [issues](https://github.com/GingerGraham/gnome-reorder-workspaces/issues)
+
+  - type: input
+    id: gnome-version
+    attributes:
+      label: GNOME Shell version (if relevant)
+      placeholder: "e.g. GNOME Shell 47.2"
+
+  - type: input
+    id: distro
+    attributes:
+      label: Linux distribution (if relevant)
+      placeholder: "e.g. Fedora 41, Ubuntu 24.10"
+
+  - type: textarea
+    id: question
+    attributes:
+      label: Your question
+    validations:
+      required: true
+
+  - type: textarea
+    id: context
+    attributes:
+      label: Additional context
+      description: Anything that might help answer your question

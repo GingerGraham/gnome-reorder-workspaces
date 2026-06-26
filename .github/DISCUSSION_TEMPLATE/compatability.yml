@@ -1,0 +1,63 @@
+title: "[Compatibility] GNOME "
+labels: []
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Use this category to report that the extension works (or doesn't) on a
+        specific GNOME Shell version, particularly before an official release adds
+        that version to `shell-version` in `metadata.json`.
+
+        Confirmed working reports help the maintainer prioritise version support.
+        Confirmed broken reports should also be filed as a
+        [Bug Report](https://github.com/GingerGraham/gnome-reorder-workspaces/issues/new?template=bug_report.yml)
+        Issue if there is a reproducible error.
+
+  - type: input
+    id: gnome-version
+    attributes:
+      label: GNOME Shell version tested
+      placeholder: "e.g. GNOME Shell 50.rc, 49.1"
+    validations:
+      required: true
+
+  - type: input
+    id: distro
+    attributes:
+      label: Linux distribution
+      placeholder: "e.g. Fedora 44 (Rawhide), GNOME OS Nightly"
+    validations:
+      required: true
+
+  - type: dropdown
+    id: status
+    attributes:
+      label: Compatibility status
+      options:
+        - "✅ Works correctly"
+        - "⚠️ Works with minor issues (describe below)"
+        - "❌ Broken — does not load"
+        - "❌ Broken — loads but incorrect behaviour"
+    validations:
+      required: true
+
+  - type: input
+    id: extension-version
+    attributes:
+      label: Extension version tested
+      placeholder: "e.g. 25 (from EGO), or installed from graham/main commit SHA"
+    validations:
+      required: true
+
+  - type: textarea
+    id: notes
+    attributes:
+      label: Notes / observed behaviour
+      description: For broken or partial cases, describe what goes wrong
+
+  - type: textarea
+    id: logs
+    attributes:
+      label: Relevant logs (if broken)
+      description: From `journalctl /usr/bin/gnome-shell -f`
+      render: text
