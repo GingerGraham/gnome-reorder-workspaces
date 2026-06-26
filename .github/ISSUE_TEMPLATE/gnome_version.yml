@@ -1,0 +1,49 @@
+name: GNOME Version Support Request
+description: Request to add support for a new GNOME Shell version
+labels:
+  - enhancement
+  - version-bump
+body:
+  - type: markdown
+    attributes:
+      value: |
+        > **Note:** New GNOME version support is typically detected and PRed automatically
+        > by the `detect-gnome-release` workflow. This template is for cases where the
+        > automation missed a release or you need to flag it manually.
+
+  - type: input
+    id: gnome-version
+    attributes:
+      label: GNOME Shell version to add
+      placeholder: "e.g. 50"
+    validations:
+      required: true
+
+  - type: input
+    id: gnome-tag
+    attributes:
+      label: gnome-shell git tag (if known)
+      description: The tag on https://gitlab.gnome.org/GNOME/gnome-shell that corresponds to this version
+      placeholder: "e.g. 50.rc, 50.beta, 50.0"
+
+  - type: dropdown
+    id: tested
+    attributes:
+      label: Have you tested the extension on this GNOME version?
+      options:
+        - "Yes — it works correctly"
+        - "Yes — it works but with issues (describe below)"
+        - "No — requesting proactive support"
+    validations:
+      required: true
+
+  - type: textarea
+    id: issues
+    attributes:
+      label: Any issues observed on this GNOME version?
+      description: If you tested and found problems, describe them here
+
+  - type: textarea
+    id: additional
+    attributes:
+      label: Additional context

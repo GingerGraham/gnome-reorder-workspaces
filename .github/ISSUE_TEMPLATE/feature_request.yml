@@ -1,0 +1,61 @@
+name: Feature Request
+description: Suggest a new capability or behaviour change for the extension
+labels:
+  - enhancement
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for taking the time to suggest an improvement. Please fill in as much
+        detail as you can — the more context you give, the easier it is to evaluate.
+
+  - type: textarea
+    id: problem
+    attributes:
+      label: What problem does this solve?
+      description: >
+        Describe the gap or friction you're experiencing. A clear problem statement
+        is more useful than jumping straight to a solution.
+      placeholder: "e.g. I use a horizontal workspace layout and the Up/Down keybindings don't match my mental model..."
+    validations:
+      required: true
+
+  - type: textarea
+    id: proposal
+    attributes:
+      label: Proposed solution
+      description: What would you like the extension to do?
+    validations:
+      required: true
+
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternatives considered
+      description: Any other approaches you've thought about, or workarounds you're currently using
+
+  - type: input
+    id: gnome-version
+    attributes:
+      label: GNOME Shell version
+      description: The version you're running — some features are only feasible on certain versions
+      placeholder: "e.g. GNOME Shell 47.2"
+    validations:
+      required: true
+
+  - type: dropdown
+    id: willing-to-contribute
+    attributes:
+      label: Would you be willing to open a PR for this?
+      options:
+        - "Yes"
+        - "Maybe — I'd need some guidance"
+        - "No"
+    validations:
+      required: true
+
+  - type: textarea
+    id: additional
+    attributes:
+      label: Additional context
+      description: Anything else — links, screenshots, related issues, prior art in other extensions

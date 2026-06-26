@@ -1,0 +1,81 @@
+name: Bug Report
+description: Extension not working, crash, or unexpected behaviour
+labels:
+  - bug
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for taking the time to report a bug. Please fill in as much detail as you can.
+
+  - type: input
+    id: gnome-version
+    attributes:
+      label: GNOME Shell version
+      description: Run `gnome-shell --version` to find this
+      placeholder: "e.g. GNOME Shell 47.2"
+    validations:
+      required: true
+
+  - type: input
+    id: extension-version
+    attributes:
+      label: Extension version
+      description: Found in GNOME Extensions app or `src/metadata.json`
+      placeholder: "e.g. 25"
+    validations:
+      required: true
+
+  - type: input
+    id: distro
+    attributes:
+      label: Linux distribution and version
+      placeholder: "e.g. Fedora 41, Ubuntu 24.10"
+    validations:
+      required: true
+
+  - type: dropdown
+    id: outside-overview-mode
+    attributes:
+      label: Outside-overview keybinding mode
+      description: What is your setting for "Keybinding behavior outside of overview"?
+      options:
+        - Reorder (always active)
+        - Default (inactive outside overview)
+        - Disabled
+        - Not sure / not changed
+    validations:
+      required: true
+
+  - type: textarea
+    id: description
+    attributes:
+      label: What happened?
+      description: Describe the bug — what did you expect, and what actually happened?
+    validations:
+      required: true
+
+  - type: textarea
+    id: steps
+    attributes:
+      label: Steps to reproduce
+      placeholder: |
+        1. Open GNOME overview
+        2. Press Ctrl+Super+Down
+        3. ...
+    validations:
+      required: true
+
+  - type: textarea
+    id: logs
+    attributes:
+      label: Relevant logs
+      description: |
+        Run `journalctl /usr/bin/gnome-shell -f` while reproducing the issue and paste any errors here.
+      render: text
+
+  - type: textarea
+    id: additional
+    attributes:
+      label: Additional context
+      description: Anything else that might be relevant

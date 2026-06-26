@@ -1,0 +1,57 @@
+name: Test Failure
+description: Automated unit test failure report (opened by test.yml workflow)
+labels:
+  - test-failure
+  - ci
+body:
+  - type: markdown
+    attributes:
+      value: |
+        > ⚠️ **This issue was opened automatically by the `test.yml` workflow.**
+        > Do not close it until the root cause has been investigated and fixed.
+
+  - type: input
+    id: workflow-run
+    attributes:
+      label: Workflow run URL
+      description: Link to the failed GitHub Actions run
+    validations:
+      required: true
+
+  - type: input
+    id: commit
+    attributes:
+      label: Commit SHA
+      description: The commit that triggered the failure
+    validations:
+      required: true
+
+  - type: input
+    id: branch
+    attributes:
+      label: Branch
+    validations:
+      required: true
+
+  - type: textarea
+    id: failed-tests
+    attributes:
+      label: Failed tests
+      description: Which test cases failed?
+    validations:
+      required: true
+
+  - type: textarea
+    id: logs
+    attributes:
+      label: Full test output
+      description: Complete stdout/stderr from the test runner
+      render: text
+    validations:
+      required: true
+
+  - type: textarea
+    id: additional
+    attributes:
+      label: Additional context
+      description: Any other relevant information (e.g. this follows a specific commit or PR merge)

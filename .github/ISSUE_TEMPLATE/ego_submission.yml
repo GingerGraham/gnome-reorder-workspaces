@@ -1,0 +1,53 @@
+name: EGO Submission Tracking
+description: Tracking issue for extensions.gnome.org submission after a GitHub Release (opened by release.yml)
+labels:
+  - ego-submission
+body:
+  - type: markdown
+    attributes:
+      value: |
+        > 📦 **This issue was opened automatically by the `release.yml` workflow.**
+        > EGO requires manual submission — complete the checklist below and close this
+        > issue once the new version is live on the EGO listing.
+
+  - type: input
+    id: version
+    attributes:
+      label: Extension version
+      placeholder: "e.g. 26"
+    validations:
+      required: true
+
+  - type: input
+    id: github-release
+    attributes:
+      label: GitHub Release URL
+      placeholder: "https://github.com/GingerGraham/gnome-reorder-workspaces/releases/tag/v26"
+    validations:
+      required: true
+
+  - type: checkboxes
+    id: checklist
+    attributes:
+      label: Submission checklist
+      options:
+        - label: GitHub Release is published with zip attached
+        - label: Log in to https://extensions.gnome.org/ with the maintainer account
+        - label: Navigate to the extension listing and upload the zip
+        - label: Set supported GNOME versions to match `shell-version` in `metadata.json`
+        - label: Submit for review
+        - label: EGO approval received (typically 1–7 days)
+        - label: EGO listing updated — close this issue
+
+  - type: input
+    id: shell-versions
+    attributes:
+      label: Supported GNOME versions (for EGO submission form)
+      description: Copy from `shell-version` array in `src/metadata.json`
+      placeholder: "45, 46, 47, 48, 49, 50"
+
+  - type: textarea
+    id: notes
+    attributes:
+      label: Notes
+      description: Any issues encountered during submission, delays, reviewer feedback, etc.

@@ -1,0 +1,44 @@
+# Labels for GingerGraham/gnome-reorder-workspaces
+# Managed declaratively — edit here, sync via the sync-labels workflow or:
+#   gh label create ... / gh label edit ...
+# The sync-labels.yml workflow applies these on push to graham/main.
+
+- name: automated
+  color: "0075ca"
+  description: PR or issue opened by a GitHub Actions workflow
+
+- name: version-bump
+  color: "e4e669"
+  description: shell-version or extension version increment
+
+- name: breaking-change
+  color: "d93f0b"
+  description: Requires BREAKING CHANGE in commit footer; major behaviour impact
+
+- name: bug
+  color: "d73a4a"
+  description: Something isn't working correctly
+
+- name: enhancement
+  color: "a2eeef"
+  description: New feature or capability
+
+- name: ci
+  color: "0052cc"
+  description: GitHub Actions workflow or build tooling changes
+
+- name: documentation
+  color: "0075ca"
+  description: README, CHANGELOG, docs/, or CLAUDE.md changes only
+
+- name: dependencies
+  color: "0075ca"
+  description: Dependency updates (yarn.lock, package.json, action versions)
+
+- name: test-failure
+  color: "e11d48"
+  description: Auto-applied to issues opened by test.yml on unit test failure
+
+- name: ego-submission
+  color: "7c3aed"
+  description: Tracking issue for extensions.gnome.org submission after a release
