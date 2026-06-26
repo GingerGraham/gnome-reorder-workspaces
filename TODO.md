@@ -63,15 +63,6 @@ Items marked 📋 are meta/process work (skills, templates, docs).
 
 ---
 
-## Documentation
-
-- [ ] 📋 **`README.md` update** — the upstream README covers installation only.
-      Add a "Maintainer Notes" or "Fork Notes" section explaining this is a maintained
-      fork, pointing to the EGO listing, and noting the automated release pipeline.
-      Keep it brief — the detailed docs live in `docs/` and `CLAUDE.md`.
-
----
-
 ## Completed
 
 _Move items here (with version/date) when the corresponding PR merges._
@@ -99,3 +90,7 @@ _Move items here (with version/date) when the corresponding PR merges._
 - [x] 🤖 `.github/dependabot.yml` — Dependabot for npm packages (ESLint toolchain)
       and GitHub Actions, both with 14-day cooldown for supply-chain safety;
       supersedes the planned `dependency-update.yml` custom workflow
+- [x] 📋 **`README.md` update** — the upstream README covers installation only.
+      Add a "Maintainer Notes" or "Fork Notes" section explaining this is a maintained
+      fork, pointing to the EGO listing, and noting the automated release pipeline.
+      Keep it brief — the detailed docs live in `docs/` and `CLAUDE.md`.
