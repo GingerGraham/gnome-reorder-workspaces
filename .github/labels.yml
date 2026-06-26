@@ -42,3 +42,7 @@
 - name: ego-submission
   color: "7c3aed"
   description: Tracking issue for extensions.gnome.org submission after a release
+
+- name: node-eol
+  color: "f97316"
+  description: Node.js version approaching or past end-of-life; upgrade required

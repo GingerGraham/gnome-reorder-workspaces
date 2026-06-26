@@ -36,13 +36,6 @@ Items marked 📋 are meta/process work (skills, templates, docs).
       tracking issue using `ego_submission` template.
       Skill: `.claude/skills/gnome-extension-release/SKILL.md`
 
-- [ ] 🤖 **`node-eol.yml`** — scheduled check (monthly) against the Node.js EOL
-      data at `https://endoflife.date/api/nodejs.json`. If the version in
-      `.node-version` is within 90 days of EOL or already EOL, open a GitHub Issue
-      (or PR) to bump to the next LTS. Should also check whether the current version
-      is not LTS and flag that.
-      Skill: `.claude/skills/node-version-sync/SKILL.md`
-
 ### Aspirational / lower priority
 
 - [ ] 🤖 **`smoke.yml`** — functional test under `xvfb-run`. Launch GNOME Shell
@@ -94,3 +87,8 @@ _Move items here (with version/date) when the corresponding PR merges._
       Add a "Maintainer Notes" or "Fork Notes" section explaining this is a maintained
       fork, pointing to the EGO listing, and noting the automated release pipeline.
       Keep it brief — the detailed docs live in `docs/` and `CLAUDE.md`.
+- [x] 🤖 **`node-eol.yml`** — scheduled check (monthly) against the Node.js EOL
+      data at `https://endoflife.date/api/nodejs.json`. If the version in
+      `.node-version` is within 90 days of EOL or already EOL, open a GitHub Issue
+      (or PR) to bump to the next LTS. Should also check whether the current version
+      is not LTS and flag that.

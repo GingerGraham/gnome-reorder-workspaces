@@ -1,0 +1,249 @@
+name: Node.js EOL Check
+
+on:
+  schedule:
+    # First day of each month at 08:00 UTC
+    - cron: '0 8 1 * *'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  issues: write
+
+jobs:
+  check-node-eol:
+    name: Check Node.js EOL status
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Read current Node version
+        id: current
+        run: |
+          VERSION=$(cat .node-version | tr -d '[:space:]')
+          MAJOR=$(echo "$VERSION" | cut -d. -f1)
+          echo "version=$VERSION" >> "$GITHUB_OUTPUT"
+          echo "major=$MAJOR" >> "$GITHUB_OUTPUT"
+          echo "Current Node version: $VERSION (major: $MAJOR)"
+
+      - name: Fetch Node.js EOL data
+        id: eol
+        run: |
+          curl -sf "https://endoflife.date/api/nodejs.json" -o /tmp/nodejs-eol.json
+          echo "EOL data fetched"
+          cat /tmp/nodejs-eol.json | python3 -m json.tool --no-ensure-ascii > /tmp/nodejs-eol-pretty.json || true
+
+      - name: Analyse EOL status
+        id: analyse
+        env:
+          CURRENT_MAJOR: ${{ steps.current.outputs.major }}
+          CURRENT_VERSION: ${{ steps.current.outputs.version }}
+        run: |
+          python3 << 'EOF'
+          import json, os, sys
+          from datetime import datetime, timezone
+
+          major = os.environ["CURRENT_MAJOR"]
+          version = os.environ["CURRENT_VERSION"]
+          today = datetime.now(timezone.utc).date()
+
+          with open("/tmp/nodejs-eol.json") as f:
+              data = json.load(f)
+
+          # Find the entry for the current major
+          entry = next((e for e in data if str(e["cycle"]) == major), None)
+
+          if entry is None:
+              print(f"::warning::No EOL data found for Node.js {major}.x — manual check needed")
+              with open(os.environ["GITHUB_OUTPUT"], "a") as out:
+                  out.write("status=unknown\n")
+                  out.write(f"major={major}\n")
+                  out.write(f"version={version}\n")
+              sys.exit(0)
+
+          eol_date_str = entry.get("eol")
+          lts = entry.get("lts", False)  # false if not LTS, or a date string if LTS
+
+          is_lts = bool(lts) and lts is not False
+
+          eol_date = None
+          days_until_eol = None
+          if eol_date_str and eol_date_str is not True:
+              eol_date = datetime.strptime(str(eol_date_str), "%Y-%m-%d").date()
+              days_until_eol = (eol_date - today).days
+
+          # Determine status
+          status = "ok"
+          reasons = []
+
+          if not is_lts:
+              status = "warn"
+              reasons.append(f"Node.js {major} is not an LTS release")
+
+          if days_until_eol is not None:
+              if days_until_eol < 0:
+                  status = "eol"
+                  reasons.append(f"Node.js {major} reached end-of-life on {eol_date} ({abs(days_until_eol)} days ago)")
+              elif days_until_eol <= 90:
+                  if status != "eol":
+                      status = "warn"
+                  reasons.append(f"Node.js {major} reaches end-of-life on {eol_date} (in {days_until_eol} days)")
+
+          summary = "; ".join(reasons) if reasons else f"Node.js {major} is current LTS, EOL {eol_date}"
+
+          print(f"Status: {status}")
+          print(f"Summary: {summary}")
+          print(f"LTS: {is_lts}")
+          print(f"EOL date: {eol_date}")
+          print(f"Days until EOL: {days_until_eol}")
+
+          with open(os.environ["GITHUB_OUTPUT"], "a") as out:
+              out.write(f"status={status}\n")
+              out.write(f"major={major}\n")
+              out.write(f"version={version}\n")
+              out.write(f"is_lts={'true' if is_lts else 'false'}\n")
+              out.write(f"eol_date={eol_date or 'unknown'}\n")
+              out.write(f"days_until_eol={days_until_eol if days_until_eol is not None else 'unknown'}\n")
+              out.write(f"summary={summary}\n")
+          EOF
+
+      - name: Check for existing open issue
+        id: existing
+        if: steps.analyse.outputs.status != 'ok'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          EXISTING=$(gh issue list \
+            --repo "$GITHUB_REPOSITORY" \
+            --label "node-eol" \
+            --state open \
+            --json number \
+            --jq '.[0].number // empty')
+          echo "issue_number=${EXISTING}" >> "$GITHUB_OUTPUT"
+          if [ -n "$EXISTING" ]; then
+            echo "Existing open node-eol issue: #${EXISTING} — skipping creation"
+          else
+            echo "No existing open node-eol issue found"
+          fi
+
+      - name: Open issue (EOL or approaching EOL)
+        if: |
+          steps.analyse.outputs.status == 'eol' &&
+          steps.existing.outputs.issue_number == ''
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          CURRENT_MAJOR: ${{ steps.analyse.outputs.major }}
+          CURRENT_VERSION: ${{ steps.analyse.outputs.version }}
+          EOL_DATE: ${{ steps.analyse.outputs.eol_date }}
+          DAYS_UNTIL_EOL: ${{ steps.analyse.outputs.days_until_eol }}
+          SUMMARY: ${{ steps.analyse.outputs.summary }}
+          RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+        run: |
+          BODY=$(cat << BODY
+          ## Node.js EOL Alert
+
+          > ⚠️ **This issue was opened automatically by the \`node-eol.yml\` workflow.**
+
+          **Current version:** Node.js ${CURRENT_MAJOR} (\`${CURRENT_VERSION}\` in \`.node-version\`)
+          **EOL date:** ${EOL_DATE}
+          **Status:** ${SUMMARY}
+
+          ### Action required
+
+          Node.js ${CURRENT_MAJOR} has reached (or is approaching) end-of-life.
+          The \`.node-version\` file and \`.devcontainer/Dockerfile\` should be updated
+          to the current LTS release.
+
+          See [\`.claude/skills/node-version-sync/SKILL.md\`](.claude/skills/node-version-sync/SKILL.md)
+          for the exact update procedure.
+
+          ### Next LTS
+
+          Check https://endoflife.date/nodejs for the current recommended LTS version,
+          then follow the node-version-sync skill to update both files in a single PR.
+
+          ### Checklist
+
+          - [ ] Determine the new LTS version from https://endoflife.date/nodejs
+          - [ ] Update \`.node-version\` to the new full semver
+          - [ ] Update \`.devcontainer/Dockerfile\` base image major
+          - [ ] Verify \`install.yml\` and \`lint.yml\` pass on the PR
+          - [ ] Update \`CHANGELOG.md\` under \`[Unreleased]\`
+
+          ---
+          *Workflow run: ${RUN_URL}*
+          BODY
+          )
+
+          gh issue create \
+            --repo "$GITHUB_REPOSITORY" \
+            --title "chore(deps): Node.js ${CURRENT_MAJOR} EOL — update to next LTS" \
+            --body "$BODY" \
+            --label "node-eol,dependencies,ci"
+
+      - name: Open issue (approaching EOL — warning)
+        if: |
+          steps.analyse.outputs.status == 'warn' &&
+          steps.existing.outputs.issue_number == ''
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          CURRENT_MAJOR: ${{ steps.analyse.outputs.major }}
+          CURRENT_VERSION: ${{ steps.analyse.outputs.version }}
+          IS_LTS: ${{ steps.analyse.outputs.is_lts }}
+          EOL_DATE: ${{ steps.analyse.outputs.eol_date }}
+          DAYS_UNTIL_EOL: ${{ steps.analyse.outputs.days_until_eol }}
+          SUMMARY: ${{ steps.analyse.outputs.summary }}
+          RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+        run: |
+          # Build a context-sensitive reason block
+          if [ "$IS_LTS" = "false" ]; then
+            REASON="Node.js ${CURRENT_MAJOR} is **not an LTS release**. Non-LTS versions have a shorter support window and should not be used in production toolchains."
+          else
+            REASON="Node.js ${CURRENT_MAJOR} reaches end-of-life on **${EOL_DATE}** (${DAYS_UNTIL_EOL} days from now)."
+          fi
+
+          BODY=$(cat << BODY
+          ## Node.js Version Warning
+
+          > 📋 **This issue was opened automatically by the \`node-eol.yml\` workflow.**
+
+          **Current version:** Node.js ${CURRENT_MAJOR} (\`${CURRENT_VERSION}\` in \`.node-version\`)
+          **EOL date:** ${EOL_DATE}
+          **Status:** ${SUMMARY}
+
+          ### Details
+
+          ${REASON}
+
+          Plan a version bump to the current LTS before EOL is reached or before this
+          becomes blocking in CI.
+
+          See [\`.claude/skills/node-version-sync/SKILL.md\`](.claude/skills/node-version-sync/SKILL.md)
+          for the exact update procedure.
+
+          ### Checklist
+
+          - [ ] Determine the new LTS version from https://endoflife.date/nodejs
+          - [ ] Update \`.node-version\` to the new full semver
+          - [ ] Update \`.devcontainer/Dockerfile\` base image major
+          - [ ] Verify \`install.yml\` and \`lint.yml\` pass on the PR
+          - [ ] Update \`CHANGELOG.md\` under \`[Unreleased]\`
+
+          ---
+          *Workflow run: ${RUN_URL}*
+          BODY
+          )
+
+          gh issue create \
+            --repo "$GITHUB_REPOSITORY" \
+            --title "chore(deps): Node.js ${CURRENT_MAJOR} approaching EOL — plan LTS upgrade" \
+            --body "$BODY" \
+            --label "node-eol,dependencies,ci"
+
+      - name: Log clean status
+        if: steps.analyse.outputs.status == 'ok'
+        run: |
+          echo "✅ Node.js ${{ steps.analyse.outputs.major }} is current LTS, EOL ${{ steps.analyse.outputs.eol_date }}"
+          echo "No action required."
